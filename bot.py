@@ -9,6 +9,19 @@ intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 @bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+
+    # Eğer mesajda http/https link varsa ve yetkili değilse banla
+    if "http://" in message.content or "https://" in message.content:
+        if not message.author.guild_permissions.administrator:
+            await message.channel.send(f"{message.author.mention} link paylaşımı nedeniyle yasaklandı! 🚫")
+            await message.guild.ban(message.author, reason="İzinsiz link paylaşımı")
+            return  # İşlem tamamlandı, mesajları takip etmeye gerek yok
+
+    await bot.process_commands(message)
+@bot.event
 async def on_ready():
     print(f'Giriş yapıldı:  {bot.user.name}')
 
