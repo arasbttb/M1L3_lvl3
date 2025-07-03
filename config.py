@@ -1,1 +1,1 @@
-token = "Botunuzun tokenini buraya girin"
+token = ""
